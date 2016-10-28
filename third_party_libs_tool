@@ -78,7 +78,7 @@ main() {
     done
 
     # fix dynamic link info in executables and just copied libs
-    relink_all "$@"
+    [ -z "$list" ] && relink_all "$@"
 
     quit 0
 }
