@@ -26,6 +26,37 @@ With `--list` only scan for dylibs, do not copy or link anything.
 **WARNING:** it is your responsibility to ensure that the licenses for the
 libraries that end up bundled in your `.app` permit redistribution.
 
+# USING WITH CMAKE
+
+You can easily automate invoking this script from cmake in a `POST_BUILD` step
+using something like this:
+
+```cmake
+SET(MYAPP_ICON myapp.icns)
+SET(MYAPP_ICON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/icons/${MYAPP_ICON})
+
+ADD_EXECUTABLE(
+    myapp
+    MACOSX_BUNDLE
+    $(MYAPP_SOURCES}
+    $(MYAPP_RESOURCES}
+    ${MYAPP_ICON_PATH}
+)
+
+TARGET_LINK_LIBRARIES(
+    myapp
+    ${MYAPP_LIBRARIES}
+)
+
+IF(APPLE)
+    SET(MACOSX_BUNDLE_ICON_FILE ${MYAPP_ICON})
+    SET_SOURCE_FILES_PROPERTIES(${MYAPP_ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+    ADD_CUSTOM_COMMAND(TARGET myapp POST_BUILD
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/osx/third_party_libs_tool "$<TARGET_FILE_DIR:myapp>/../..")
+ENDIF(APPLE)
+```
+
 # LICENSE
 
 BSD 2-Clause
