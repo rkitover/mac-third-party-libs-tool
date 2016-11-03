@@ -17,6 +17,8 @@ recursively scan them for other dylibs, copy the found dylibs into
 `MyApp.app/Contents/Frameworks`, and fix up all dynamic linkage stuff for both
 the binaries and the copied dylibs.
 
+Linking to multiple versions of a library is now supported.
+
 The searching etc. can be made more flexible, PRs welcome.
 
 With `--list` only scan for dylibs, do not copy or link anything.
