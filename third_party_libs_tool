@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version=0.5
+version=0.6
 
 main() {
     # parse options
@@ -32,7 +32,7 @@ main() {
 
     mktmp
 
-    app_bundle=$(echo "$1" | fully_resolve_links | sed 's,/*$,,')
+    app_bundle=$(echo "$1" | fully_resolve_links)
 
     case "$app_bundle" in
         *.app|*.APP)
@@ -146,22 +146,14 @@ lib_scan() {
 
 fully_resolve_links() {
     while read -r file; do
+        # get initial part for non-absolute path, or blank for absolute
+        path=${file%%/*}
+        # and set $file to the rest
+        file=${file#*/}
+
         OLDIFS=$IFS
         IFS='
 '
-
-        path=
-        case "$file" in
-            /*)
-                ;;
-            *)
-                # get initial part for non-absolute path
-                path=$(echo "$file" | sed 's,^\([^/]*\).*,\1,')
-                # and set $file to the rest
-                file=$(echo "$file" | sed 's,^[^/]*/*\(.*\),\1,')
-                ;;
-        esac
-
         for part in $(echo "$file" | sed 's,^/*,,; s,/*$,,; s,//*,\
 ,g'); do
             path=$(resolve_link "$path/$part")
@@ -179,6 +171,9 @@ fully_resolve_links() {
                     ;;
             esac
         done
+
+        # remove trailing /s
+        path=$(echo "$path" | sed 's,/*$,,')
 
         echo "$path"
     done
