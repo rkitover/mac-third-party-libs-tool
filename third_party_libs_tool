@@ -149,7 +149,19 @@ fully_resolve_links() {
         OLDIFS=$IFS
         IFS='
 '
+
         path=
+        case "$file" in
+            /*)
+                ;;
+            *)
+                # get initial part for non-absolute path
+                path=$(echo "$file" | sed 's,^\([^/]*\).*,\1,')
+                # and set $file to the rest
+                file=$(echo "$file" | sed 's,^[^/]*/*\(.*\),\1,')
+                ;;
+        esac
+
         for part in $(echo "$file" | sed 's,^/*,,; s,/*$,,; s,//*,\
 ,g'); do
             path=$(resolve_link "$path/$part")
@@ -176,7 +188,7 @@ resolve_link() {
     file="$1"
 
     while [ -h "$file" ]; do
-        ls0=`ls -l "$file"`
+        ls0=`ls -ld "$file"`
         new_link=`expr "$ls0" : '.* -> \(.*\)$'`
         if expr "$new_link" : '/.*' > /dev/null; then
             file="$new_link"
