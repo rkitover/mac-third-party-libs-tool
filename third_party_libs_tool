@@ -177,11 +177,16 @@ fully_resolve_links() {
         IFS=$OLDIFS
 
         # remove 'foo/..' path parts
-        case "$path" in
-            */../*|*/..)
-                path=$(echo "$path" | sed 's,//*[^/][^/]*//*\.\./*,/,g')
-                ;;
-        esac
+        while :; do
+            case "$path" in
+                */../*|*/..)
+                    path=$(echo "$path" | sed 's,//*[^/][^/]*//*\.\./*,/,g')
+                    ;;
+                *)
+                    break
+                    ;;
+            esac
+        done
 
         # remove trailing /s
         while [ "$path" != "${path%/}" ]; do

@@ -23,7 +23,7 @@ The searching etc. can be made more flexible, PRs welcome.
 
 With `--list` only scan for dylibs, do not copy or link anything.
 
-Version 0.8 is much faster than previous ones.
+Version 0.9 is much faster than previous ones.
 
 **WARNING:** linking may require sudo, but most likely will not.
 
