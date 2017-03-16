@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version=1.0
+version=1.1
 
 main() {
     # parse options
@@ -151,6 +151,14 @@ lib_scan() {
                    { sub("^[ \t]*", ""); sub("[ \t]*\\(.*\\)[ \t]*$", ""); print }'); do
 
             [ "$lib" = "$bin" ] && continue
+
+            # check for libs already linked as @rpath/ which usually means /usr/local/lib/
+            # yes this is a horrible hack, but this will generally only apply to SFML from homebrew
+            case "$lib" in
+                '@rpath/'*)
+                    lib='/usr/local/lib'"${lib#@rpath}"
+                    ;;
+            esac
 
             echo "$lib"
             set -- "$@" "$lib"
