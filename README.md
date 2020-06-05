@@ -23,8 +23,6 @@ The searching etc. can be made more flexible, PRs welcome.
 
 With `--list` only scan for dylibs, do not copy or link anything.
 
-Version 1.0 is much faster than previous ones.
-
 **WARNING:** linking may require sudo, but most likely will not.
 
 **WARNING:** it is your responsibility to ensure that the licenses for the
@@ -64,8 +62,3 @@ ENDIF(APPLE)
 # LICENSE
 
 BSD 2-Clause
-
-# CONTRIBUTING
-
-This program is written in POSIX sh, please do not submit PRs with bashisms. See
-the standard for details. If you have doubts, run it through `dash`.
